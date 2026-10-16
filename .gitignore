@@ -1,3 +1,7 @@
+## remove application.properties
+
+application.properties   
+
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
