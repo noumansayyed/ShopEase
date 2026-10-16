@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">ShopEase</a>
+
+        <div class="ms-auto d-flex align-items-center">
+            <div sec:authorize="isAuthenticated()" class="d-flex align-items-center">
+                <span class="text-white me-3">
+                    Hi, <span sec:authentication="name">user</span>
+                </span>
+                <form th:action="@{/logout}" method="post" class="mb-0">
+                    <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+                </form>
+            </div>
+
+            <div sec:authorize="!isAuthenticated()">
+                <a th:href="@{/login}" class="btn btn-outline-light btn-sm me-2">Login</a>
+                <a th:href="@{/register}" class="btn btn-light btn-sm">Register</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>
