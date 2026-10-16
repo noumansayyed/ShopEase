@@ -11,12 +11,57 @@
 
 <div class="container mt-4">
 
-    <h2 class="mb-4">All Products</h2>
+    <h2 class="mb-4">Browse Products</h2>
 
-    <div class="alert alert-info" th:if="${products.isEmpty()}">
-        No products available yet.
+    <!-- ===== Search + Category Filter Bar ===== -->
+    <form method="get" th:action="@{/products}" class="row g-2 mb-4">
+
+        <div class="col-md-6">
+            <input type="text"
+                   name="q"
+                   class="form-control"
+                   placeholder="Search products by name..."
+                   th:value="${q}" />
+        </div>
+
+        <div class="col-md-4">
+            <select name="category" class="form-select">
+                <option value="" th:selected="${selectedCategory == ''}">All categories</option>
+                <option th:each="cat : ${categories}"
+                        th:value="${cat.slug}"
+                        th:text="${cat.name}"
+                        th:selected="${cat.slug == selectedCategory}">
+                    Category name
+                </option>
+            </select>
+        </div>
+
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary flex-fill">Search</button>
+            <a th:href="@{/products}" class="btn btn-outline-secondary">Reset</a>
+        </div>
+    </form>
+
+    <!-- ===== Active filter feedback ===== -->
+    <p class="text-muted small" th:if="${q != '' or selectedCategory != ''}">
+        <span th:if="${q != ''}">
+            Search: <strong th:text="${q}">keyword</strong>
+        </span>
+        <span th:if="${q != '' and selectedCategory != ''}"> &middot; </span>
+        <span th:if="${selectedCategory != ''}">
+            Category: <strong th:text="${selectedCategory}">slug</strong>
+        </span>
+        <span> — <span th:text="${products.size()}">0</span> result(s)</span>
+    </p>
+
+    <!-- ===== No results ===== -->
+    <div class="alert alert-warning" th:if="${products.isEmpty()}">
+        <strong>No products found.</strong>
+        Try a different search or
+        <a th:href="@{/products}">browse all products</a>.
     </div>
 
+    <!-- ===== Product grid ===== -->
     <div class="row g-4">
         <div class="col-6 col-md-4 col-lg-3" th:each="product : ${products}">
             <div class="card h-100 shadow-sm">

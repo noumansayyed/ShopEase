@@ -29,4 +29,26 @@ public class ProductServiceImpl implements ProductService {
                 .filter(Product::isActive)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found: " + id));
     }
+
+    @Override
+    public List<Product> searchProducts(String keyword, String categorySlug) {
+
+        String q = (keyword == null) ? "" : keyword.trim();
+        String cat = (categorySlug == null) ? "" : categorySlug.trim();
+
+        boolean hasKeyword = !q.isEmpty();
+        boolean hasCategory = !cat.isEmpty();
+
+        if (hasKeyword && hasCategory) {
+            return productRepository
+                    .findByNameContainingIgnoreCaseAndCategorySlugAndActiveTrue(q, cat);
+        }
+        if (hasKeyword) {
+            return productRepository.findByNameContainingIgnoreCaseAndActiveTrue(q);
+        }
+        if (hasCategory) {
+            return productRepository.findByCategorySlugAndActiveTrue(cat);
+        }
+        return productRepository.findByActiveTrue();
+    }
 }
